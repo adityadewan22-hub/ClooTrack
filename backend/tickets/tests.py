@@ -70,3 +70,27 @@ class TicketAPITests(APITestCase):
         self.assertEqual(response.status_code, 200)
         ticket.refresh_from_db()
         self.assertEqual(ticket.status, "resolved")
+
+    def test_stats_endpoint(self):
+        Ticket.objects.create(
+            title="A",
+            description="A",
+            category="technical",
+            priority="high",
+            status="open",
+        )
+
+        Ticket.objects.create(
+            title="B",
+            description="B",
+            category="billing",
+            priority="low",
+            status="resolved",
+        )
+
+        response = self.client.get("/api/tickets/stats/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["total_tickets"], 2)
+        self.assertEqual(response.data["open_tickets"], 1)
+        self.assertIn("technical", response.data["category_breakdown"])
