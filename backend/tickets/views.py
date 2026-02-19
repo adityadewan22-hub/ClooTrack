@@ -12,6 +12,7 @@ from django.db.models import Count, Avg
 from django.db.models.functions import TruncDate
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from .llm.classifier import classify_ticket
 
 
 class TicketViewSet(ModelViewSet):
@@ -61,3 +62,14 @@ class TicketViewSet(ModelViewSet):
                 },
             }
         )
+
+    @action(detail=False, methods=["post"], url_path="classify")
+    def classify(self, request):
+        description = request.data.get("description")
+
+        if not description:
+            return Response({"error": "Description is required"}, status=400)
+
+        result = classify_ticket(description)
+
+        return Response(result)
