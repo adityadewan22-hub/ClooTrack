@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "corsheaders",
     # Local apps
     "tickets",
+    # REST framework
+    "django_filters",
 ]
 
 MIDDLEWARE = [
