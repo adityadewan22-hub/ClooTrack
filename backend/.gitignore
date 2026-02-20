@@ -2,3 +2,6 @@
 
 # Ignore all __pycache__ folders anywhere
 __pycache__/
+
+venv/
+backend/venv/
